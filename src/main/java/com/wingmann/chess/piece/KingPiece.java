@@ -1,12 +1,12 @@
 package com.wingmann.chess.piece;
 
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 public interface KingPiece {
-    Coordinate getCastleCoordinatesKingK();
-    Coordinate getCastleCoordinatesKingQ();
-    Coordinate getTransitionCoordinatesKingK();
-    Coordinate getTransitionCoordinatesKingQ();
+    BoardCoordinates getCastleCoordinatesKingK();
+    BoardCoordinates getCastleCoordinatesKingQ();
+    BoardCoordinates getTransitionCoordinatesKingK();
+    BoardCoordinates getTransitionCoordinatesKingQ();
     Rook getRookKing();
     Rook getRookQueen();
     boolean canCastleKing (PieceState pieces);

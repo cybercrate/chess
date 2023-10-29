@@ -1,8 +1,8 @@
 package com.wingmann.chess.piece;
 
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 public interface RookPiece {
-    Coordinate getCastleCoordinatesRook();
-    void setCastleCoordinatesRook(Coordinate castleCoordinatesRook);
+    BoardCoordinates getCastleCoordinatesRook();
+    void setCastleCoordinatesRook(BoardCoordinates castleCoordinatesRook);
 }

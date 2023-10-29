@@ -1,38 +1,38 @@
 package com.wingmann.chess.piece;
 
-import com.wingmann.chess.board.*;
 import com.wingmann.chess.move.ChessMoveManager;
 import com.wingmann.chess.move.MoveManager;
+import com.wingmann.chess.util.BoardLimit;
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.*;
 
 public abstract class Piece {
     private final ID name;
     private final Color color;
-    private Coordinate coords;
-    private final Coordinate coordinate;
+    private BoardCoordinates coords;
+    private final BoardCoordinates coordinate;
     private final String pieceID;
-    private Set<Coordinate> potentialMoves = new HashSet<>();
-    public int dimension = BoardLimit.LAST_RANK.getRank();
-    public int single = BoardLimit.FIRST_RANK.getRank();
+    private Set<BoardCoordinates> potentialMoves = new HashSet<>();
+    public int dimension = BoardLimit.LAST_ROW.getRow();
+    public int single = BoardLimit.FIRST_ROW.getRow();
     private boolean hasMoved = false;
-    public static Piece emptyPiece = new Rook(Color.WHITE, Coordinate.emptyCoordinate);
+    public static Piece emptyPiece = new Rook(Color.WHITE, BoardCoordinates.EMPTY_COORDS);
 
     public static final MoveManager moveManager = new ChessMoveManager();
 
-    public Piece(ID name, Color color, Coordinate coordinate) {
+    public Piece(ID name, Color color, BoardCoordinates coords) {
         Objects.requireNonNull(name, "The piece must be correctly identified with an ID.");
         Objects.requireNonNull(color, "The piece must be either white or black.");
-        Objects.requireNonNull(coordinate, "The piece must have an origin coordinate to be correctly initiallised.");
+        Objects.requireNonNull(coords, "The piece must have an origin coordinate to be correctly initiallised.");
 
         this.name = name;
         this.color = color;
-        this.coordinate = coordinate;
+        this.coordinate = coords;
 
-        coords = coordinate;
-        pieceID = String.format("*%s*%s*%s*", name, color, coordinate.getFile());
+        this.coords = coords;
+        pieceID = String.format("*%s*%s*%s*", name, color, coords.getColumn());
     }
 
     public Piece(Piece original) {
@@ -40,29 +40,29 @@ public abstract class Piece {
 
         this.name = original.name;
         this.color = original.color;
-        this.coordinate = new Coordinate(original.coordinate);
-        this.coords = new Coordinate(original.coords);
+        this.coordinate = new BoardCoordinates(original.coordinate);
+        this.coords = new BoardCoordinates(original.coords);
         this.pieceID = original.pieceID;
         this.potentialMoves = new HashSet<>();
 
-        for (Coordinate coordinate : original.getPotentialMoves()) {
-            this.potentialMoves.add(new Coordinate(coordinate));
+        for (BoardCoordinates coordinate : original.getPotentialMoves()) {
+            this.potentialMoves.add(new BoardCoordinates(coordinate));
         }
         this.dimension = original.dimension;
         this.single = original.single;
         this.hasMoved = original.hasMoved;
     }
 
-    public Coordinate getCoords() {
+    public BoardCoordinates getCoords() {
         return coords;
     }
 
     public char getFile() {
-        return getCoords().getFile();
+        return getCoords().getColumn();
     }
 
     public int getRank() {
-        return getCoords().getRank();
+        return getCoords().getRow();
     }
 
     public Color getColor() {
@@ -73,7 +73,7 @@ public abstract class Piece {
         return name;
     }
 
-    public Coordinate getCoordinate() {
+    public BoardCoordinates getCoordinate() {
         return coordinate;
     }
 
@@ -81,7 +81,7 @@ public abstract class Piece {
         return pieceID;
     }
 
-    public void setCoords(Coordinate coords) {
+    public void setCoords(BoardCoordinates coords) {
         this.coords = coords;
     }
 
@@ -93,7 +93,7 @@ public abstract class Piece {
         hasMoved = true;
     }
 
-    public void addMoves(ArrayList<Coordinate> someMoves) {
+    public void addMoves(ArrayList<BoardCoordinates> someMoves) {
         potentialMoves.addAll(someMoves);
     }
 
@@ -101,28 +101,28 @@ public abstract class Piece {
         potentialMoves.clear();
     }
 
-    public Set<Coordinate> getPotentialMoves() {
+    public Set<BoardCoordinates> getPotentialMoves() {
         return potentialMoves;
     }
 
-    private ArrayList<Coordinate> removeOwnCheck(PieceState pieces) {
+    private ArrayList<BoardCoordinates> removeOwnCheck(PieceState pieces) {
         King potentialKing = null;
         boolean removeKingCastle = false;
         boolean removeQueenCastle = false;
 
-        ArrayList<Coordinate> potentials = getRawMoves(pieces);
+        ArrayList<BoardCoordinates> potentials = getRawMoves(pieces);
 
         if (potentials.isEmpty()) {
             return potentials;
         }
-        Iterator<Coordinate> it = potentials.iterator();
+        Iterator<BoardCoordinates> it = potentials.iterator();
 
         while (it.hasNext()) {
-            Coordinate nextMove = it.next();
+            BoardCoordinates nextMove = it.next();
             PieceState p = new PieceState(pieces);
             p.pieceMove(nextMove, this.makeCopy());
-            Coordinate kingPosition = p.findKing(getColor());
-            Set<Coordinate> dangerMoves = p.allColouredRaws(Color.not(getColor()));
+            BoardCoordinates kingPosition = p.findKing(getColor());
+            Set<BoardCoordinates> dangerMoves = p.allColouredRaws(Color.not(getColor()));
 
             if (dangerMoves.contains(kingPosition)) {
                 if (this.getName() == ID.KING) {
@@ -159,8 +159,8 @@ public abstract class Piece {
         addMoves(removeOwnCheck(pieces));
     }
 
-    public boolean isValidMove(Coordinate destination, Color colour) {
-        return getPotentialMoves().contains(destination) && (getColor() == colour);
+    public boolean isValidMove(BoardCoordinates destination, Color color) {
+        return getPotentialMoves().contains(destination) && (getColor() == color);
     }
 
     @Override
@@ -194,7 +194,7 @@ public abstract class Piece {
         return Objects.hash(name, color, coordinate, pieceID);
     }
 
-    public abstract ArrayList<Coordinate> getRawMoves(PieceState pieces);
+    public abstract ArrayList<BoardCoordinates> getRawMoves(PieceState pieces);
 
     public abstract Piece makeCopy();
 }

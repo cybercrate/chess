@@ -17,6 +17,6 @@ public class ChessGame implements Game {
 
     @Override
     public void play() {
-        board.gameLoop();
+        board.runLoop();
     }
 }

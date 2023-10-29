@@ -1,16 +1,17 @@
 package com.wingmann.chess.board;
 
 import com.wingmann.chess.piece.*;
+import com.wingmann.chess.util.BoardLimit;
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ChessBoardManager implements BoardManager {
     @Override
-    public Map<Coordinate, Piece> getBoard() {
-        Map<Coordinate, Piece> pieces = new HashMap<>();
+    public Map<BoardCoordinates, Piece> get() {
+        Map<BoardCoordinates, Piece> pieces = new HashMap<>();
 
         getBlackPieces(pieces);
         getWhitePieces(pieces);
@@ -18,26 +19,26 @@ public class ChessBoardManager implements BoardManager {
         return pieces;
     }
 
-    private void getBlackPieces(Map<Coordinate, Piece> pieces) {
+    private void getBlackPieces(Map<BoardCoordinates, Piece> pieces) {
         int blackPawnRank = 7;
         int blackRank = 8;
 
-        Piece pawnBa = new Pawn(Color.BLACK, new Coordinate('a', blackPawnRank));
-        Piece pawnBb = new Pawn(Color.BLACK, new Coordinate('b', blackPawnRank));
-        Piece pawnBc = new Pawn(Color.BLACK, new Coordinate('c', blackPawnRank));
-        Piece pawnBd = new Pawn(Color.BLACK, new Coordinate('d', blackPawnRank));
-        Piece pawnBe = new Pawn(Color.BLACK, new Coordinate('e', blackPawnRank));
-        Piece pawnBf = new Pawn(Color.BLACK, new Coordinate('f', blackPawnRank));
-        Piece pawnBg = new Pawn(Color.BLACK, new Coordinate('g', blackPawnRank));
-        Piece pawnBh = new Pawn(Color.BLACK, new Coordinate('h', blackPawnRank));
-        Piece rookBa = new Rook(Color.BLACK, new Coordinate('a', blackRank));
-        Piece rookBh = new Rook(Color.BLACK, new Coordinate('h', blackRank));
-        Piece knightBb = new Knight(Color.BLACK, new Coordinate('b', blackRank));
-        Piece knightBg = new Knight(Color.BLACK, new Coordinate('g', blackRank));
-        Piece bishopBc = new Bishop(Color.BLACK, new Coordinate('c', blackRank));
-        Piece bishopBf = new Bishop(Color.BLACK, new Coordinate('f', blackRank));
-        Piece queenB = new Queen(Color.BLACK, new Coordinate('d', blackRank));
-        Piece kingB = new King(Color.BLACK, new Coordinate('e', blackRank));
+        Piece pawnBa = new Pawn(Color.BLACK, new BoardCoordinates('a', blackPawnRank));
+        Piece pawnBb = new Pawn(Color.BLACK, new BoardCoordinates('b', blackPawnRank));
+        Piece pawnBc = new Pawn(Color.BLACK, new BoardCoordinates('c', blackPawnRank));
+        Piece pawnBd = new Pawn(Color.BLACK, new BoardCoordinates('d', blackPawnRank));
+        Piece pawnBe = new Pawn(Color.BLACK, new BoardCoordinates('e', blackPawnRank));
+        Piece pawnBf = new Pawn(Color.BLACK, new BoardCoordinates('f', blackPawnRank));
+        Piece pawnBg = new Pawn(Color.BLACK, new BoardCoordinates('g', blackPawnRank));
+        Piece pawnBh = new Pawn(Color.BLACK, new BoardCoordinates('h', blackPawnRank));
+        Piece rookBa = new Rook(Color.BLACK, new BoardCoordinates('a', blackRank));
+        Piece rookBh = new Rook(Color.BLACK, new BoardCoordinates('h', blackRank));
+        Piece knightBb = new Knight(Color.BLACK, new BoardCoordinates('b', blackRank));
+        Piece knightBg = new Knight(Color.BLACK, new BoardCoordinates('g', blackRank));
+        Piece bishopBc = new Bishop(Color.BLACK, new BoardCoordinates('c', blackRank));
+        Piece bishopBf = new Bishop(Color.BLACK, new BoardCoordinates('f', blackRank));
+        Piece queenB = new Queen(Color.BLACK, new BoardCoordinates('d', blackRank));
+        Piece kingB = new King(Color.BLACK, new BoardCoordinates('e', blackRank));
 
         pieces.put(pawnBa.getCoords(), pawnBa);
         pieces.put(pawnBb.getCoords(), pawnBb);
@@ -57,26 +58,26 @@ public class ChessBoardManager implements BoardManager {
         pieces.put(kingB.getCoords(), kingB);
     }
 
-    private void getWhitePieces(Map<Coordinate, Piece> pieces) {
+    private void getWhitePieces(Map<BoardCoordinates, Piece> pieces) {
         int whitePawnRank = 2;
         int whiteRank = 1;
 
-        Piece pawnWa = new Pawn(Color.WHITE, new Coordinate('a', whitePawnRank));
-        Piece pawnWb = new Pawn(Color.WHITE, new Coordinate('b', whitePawnRank));
-        Piece pawnWc = new Pawn(Color.WHITE, new Coordinate('c', whitePawnRank));
-        Piece pawnWd = new Pawn(Color.WHITE, new Coordinate('d', whitePawnRank));
-        Piece pawnWe = new Pawn(Color.WHITE, new Coordinate('e', whitePawnRank));
-        Piece pawnWf = new Pawn(Color.WHITE, new Coordinate('f', whitePawnRank));
-        Piece pawnWg = new Pawn(Color.WHITE, new Coordinate('g', whitePawnRank));
-        Piece pawnWh = new Pawn(Color.WHITE, new Coordinate('h', whitePawnRank));
-        Piece rookWa = new Rook(Color.WHITE, new Coordinate('a', whiteRank));
-        Piece rookWh = new Rook(Color.WHITE, new Coordinate('h', whiteRank));
-        Piece knightWb = new Knight(Color.WHITE, new Coordinate('b', whiteRank));
-        Piece knightWg = new Knight(Color.WHITE, new Coordinate('g', whiteRank));
-        Piece bishopWc = new Bishop(Color.WHITE, new Coordinate('c', whiteRank));
-        Piece bishopWf = new Bishop(Color.WHITE, new Coordinate('f', whiteRank));
-        Piece queenW = new Queen(Color.WHITE, new Coordinate('d', whiteRank));
-        Piece kingW = new King(Color.WHITE, new Coordinate('e', whiteRank));
+        Piece pawnWa = new Pawn(Color.WHITE, new BoardCoordinates('a', whitePawnRank));
+        Piece pawnWb = new Pawn(Color.WHITE, new BoardCoordinates('b', whitePawnRank));
+        Piece pawnWc = new Pawn(Color.WHITE, new BoardCoordinates('c', whitePawnRank));
+        Piece pawnWd = new Pawn(Color.WHITE, new BoardCoordinates('d', whitePawnRank));
+        Piece pawnWe = new Pawn(Color.WHITE, new BoardCoordinates('e', whitePawnRank));
+        Piece pawnWf = new Pawn(Color.WHITE, new BoardCoordinates('f', whitePawnRank));
+        Piece pawnWg = new Pawn(Color.WHITE, new BoardCoordinates('g', whitePawnRank));
+        Piece pawnWh = new Pawn(Color.WHITE, new BoardCoordinates('h', whitePawnRank));
+        Piece rookWa = new Rook(Color.WHITE, new BoardCoordinates('a', whiteRank));
+        Piece rookWh = new Rook(Color.WHITE, new BoardCoordinates('h', whiteRank));
+        Piece knightWb = new Knight(Color.WHITE, new BoardCoordinates('b', whiteRank));
+        Piece knightWg = new Knight(Color.WHITE, new BoardCoordinates('g', whiteRank));
+        Piece bishopWc = new Bishop(Color.WHITE, new BoardCoordinates('c', whiteRank));
+        Piece bishopWf = new Bishop(Color.WHITE, new BoardCoordinates('f', whiteRank));
+        Piece queenW = new Queen(Color.WHITE, new BoardCoordinates('d', whiteRank));
+        Piece kingW = new King(Color.WHITE, new BoardCoordinates('e', whiteRank));
 
         pieces.put(pawnWa.getCoords(), pawnWa);
         pieces.put(pawnWb.getCoords(), pawnWb);
@@ -97,10 +98,10 @@ public class ChessBoardManager implements BoardManager {
     }
 
     @Override
-    public String displayBoard(PieceState pieces) {
-        int dimRank = BoardLimit.FIRST_RANK.getRank();
-        char dimFile = BoardLimit.FIRST_FILE.getFile();
-        char lastFile = BoardLimit.LAST_FILE.getFile();
+    public String display(PieceState pieces) {
+        int dimRank = BoardLimit.FIRST_ROW.getRow();
+        char dimFile = BoardLimit.FIRST_COLUMN.getColumn();
+        char lastFile = BoardLimit.LAST_COLUMN.getColumn();
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder
@@ -115,11 +116,11 @@ public class ChessBoardManager implements BoardManager {
                     .append("|");
 
             for (char file = dimFile; file <= lastFile; file++) {
-                Coordinate coordinate = new Coordinate(file, rank);
-                boolean correctCoordinates = pieces.getPieces().get(coordinate) != null;
+                BoardCoordinates coords = new BoardCoordinates(file, rank);
+                boolean correctCoordinates = pieces.getPieces().get(coords) != null;
 
                 stringBuilder.append(correctCoordinates
-                        ? String.format(" %s |", pieces.getPieces().get(coordinate).toBoardString())
+                        ? String.format(" %s |", pieces.getPieces().get(coords).toBoardString())
                         : "    |");
             }
             stringBuilder

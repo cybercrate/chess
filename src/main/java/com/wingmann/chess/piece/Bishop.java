@@ -1,13 +1,13 @@
 package com.wingmann.chess.piece;
 
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
-    public Bishop(Color color, Coordinate coordinate) {
-        super(ID.BISHOP, color, coordinate);
+    public Bishop(Color color, BoardCoordinates coords) {
+        super(ID.BISHOP, color, coords);
     }
 
     private Bishop(Bishop original) {
@@ -20,9 +20,9 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public ArrayList<Coordinate> getRawMoves(PieceState pieces) {
-        ArrayList<Coordinate> frontRDig = moveManager.frontRDigFree(pieces, this, dimension);
-        ArrayList<Coordinate> backLDig = moveManager.backLDigFree(pieces, this, dimension);
+    public ArrayList<BoardCoordinates> getRawMoves(PieceState pieces) {
+        ArrayList<BoardCoordinates> frontRDig = moveManager.frontRDigFree(pieces, this, dimension);
+        ArrayList<BoardCoordinates> backLDig = moveManager.backLDigFree(pieces, this, dimension);
 
         frontRDig.addAll(moveManager.backRDigFree(pieces, this, dimension));
         backLDig.addAll(moveManager.frontLDigFree(pieces, this, dimension));

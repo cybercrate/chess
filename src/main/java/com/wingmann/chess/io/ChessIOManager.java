@@ -1,7 +1,7 @@
 package com.wingmann.chess.io;
 
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 import com.wingmann.chess.piece.ID;
 import com.wingmann.chess.piece.King;
 import com.wingmann.chess.piece.Pawn;
@@ -18,12 +18,12 @@ import java.util.Scanner;
 
 public class ChessIOManager implements IOManager {
     @Override
-    public String moveString(PieceState pieces, Coordinate coordinate, Piece piece) {
+    public String moveString(PieceState pieces, BoardCoordinates coords, Piece piece) {
         boolean isCastle = false;
 
         StringBuilder str = new StringBuilder();
         PieceState previousBoard = new PieceState(pieces.getPreviousPieces());
-        Coordinate previousCoordinate = previousBoard.findPiece(piece);
+        BoardCoordinates previousCoordinate = previousBoard.findPiece(piece);
         Piece previousPiece = previousBoard.getPiece(previousCoordinate);
 
         if (piece.getName() != ID.KING) {
@@ -32,11 +32,11 @@ public class ChessIOManager implements IOManager {
             King king = (King) piece;
             King previousKing = (King) previousPiece;
 
-            if (coordinate.equals(king.getCastleCoordinatesKingQ())
+            if (coords.equals(king.getCastleCoordinatesKingQ())
                     && previousKing.canCastleQueen(previousBoard)) {
                 str.append("O-O-O");
                 isCastle = true;
-            } else if (coordinate.equals(king.getCastleCoordinatesKingK())
+            } else if (coords.equals(king.getCastleCoordinatesKingK())
                     && previousKing.canCastleKing(previousBoard)) {
                 str.append("O-O");
                 isCastle = true;
@@ -44,26 +44,26 @@ public class ChessIOManager implements IOManager {
                 str.append(piece.getName().toString());
             }
         }
-        str.append(removeAmbiguous(previousBoard, coordinate, previousPiece));
+        str.append(removeAmbiguous(previousBoard, coords, previousPiece));
 
         if (pieces.getIsCapture()) {
             if (piece.getName() == ID.PAWN) {
                 assert piece instanceof Pawn;
                 Pawn pawn = (Pawn) piece;
-                str.append(pawn.getPreviousCoordinate().getFile()).append("x");
+                str.append(pawn.getPreviousCoordinate().getColumn()).append("x");
             } else {
                 str.append("x");
             }
         }
 
         if (!isCastle) {
-            str.append(coordinate.toString());
+            str.append(coords.toString());
         }
 
         if (piece.getName() == ID.PAWN) {
             Pawn pawn = (Pawn) piece;
 
-            if (pawn.canPromoteBlack(coordinate) || pawn.canPromoteWhite(coordinate)) {
+            if (pawn.canPromoteBlack(coords) || pawn.canPromoteWhite(coords)) {
                 str.append("=").append(pawn.getPromotedPiece().getName().toString());
             }
         }
@@ -76,8 +76,8 @@ public class ChessIOManager implements IOManager {
         return str.toString();
     }
 
-    private String removeAmbiguous(PieceState pieces, Coordinate coordinate, Piece piece) {
-        if (pieces.pieceToSameCoordinate(coordinate, piece)) {
+    private String removeAmbiguous(PieceState pieces, BoardCoordinates coords, Piece piece) {
+        if (pieces.pieceToSameCoordinate(coords, piece)) {
             if (pieces.pieceInSameRank(piece)) {
                 return String.valueOf(piece.getFile());
             } else if (pieces.pieceInSameFile(piece)) {

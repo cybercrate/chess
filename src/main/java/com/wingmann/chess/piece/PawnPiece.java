@@ -1,15 +1,15 @@
 package com.wingmann.chess.piece;
 
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 public interface PawnPiece {
-    void setPreviousCoordinate(Coordinate previous);
-    Coordinate getPreviousCoordinate();
+    void setPreviousCoordinate(BoardCoordinates previous);
+    BoardCoordinates getPreviousCoordinate();
     void setHasMovedTwo();
     boolean getEnPassantLeft();
     boolean getEnPassantRight();
-    Piece promotionQuery(Coordinate promotionSquare);
-    boolean canPromoteBlack(Coordinate coordinate);
-    boolean canPromoteWhite(Coordinate coordinate);
+    Piece promotionQuery(BoardCoordinates promotionSquare);
+    boolean canPromoteBlack(BoardCoordinates coordinate);
+    boolean canPromoteWhite(BoardCoordinates coordinate);
     Piece getPromotedPiece();
 }

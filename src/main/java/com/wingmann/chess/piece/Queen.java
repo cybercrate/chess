@@ -1,13 +1,13 @@
 package com.wingmann.chess.piece;
 
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.ArrayList;
 
 public class Queen extends Piece {
-    public Queen(Color color, Coordinate coordinate) {
-        super(ID.QUEEN, color, coordinate);
+    public Queen(Color color, BoardCoordinates coords) {
+        super(ID.QUEEN, color, coords);
     }
 
     private Queen(Queen original) {
@@ -20,11 +20,11 @@ public class Queen extends Piece {
     }
 
     @Override
-    public ArrayList<Coordinate> getRawMoves(PieceState pieces) {
-        ArrayList<Coordinate> front = moveManager.frontFree(pieces,this, dimension);
-        ArrayList<Coordinate> back = moveManager.backFree(pieces,this, dimension);
-        ArrayList<Coordinate> frontRDig = moveManager.frontRDigFree(pieces, this, dimension);
-        ArrayList<Coordinate> backLDig = moveManager.backLDigFree(pieces, this, dimension);
+    public ArrayList<BoardCoordinates> getRawMoves(PieceState pieces) {
+        ArrayList<BoardCoordinates> front = moveManager.frontFree(pieces,this, dimension);
+        ArrayList<BoardCoordinates> back = moveManager.backFree(pieces,this, dimension);
+        ArrayList<BoardCoordinates> frontRDig = moveManager.frontRDigFree(pieces, this, dimension);
+        ArrayList<BoardCoordinates> backLDig = moveManager.backLDigFree(pieces, this, dimension);
 
         front.addAll(moveManager.rightFree(pieces,this, dimension));
         back.addAll(moveManager.leftFree(pieces,this, dimension));

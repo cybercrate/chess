@@ -5,7 +5,7 @@ import com.wingmann.chess.io.IOManager;
 import com.wingmann.chess.piece.Piece;
 import com.wingmann.chess.piece.PieceState;
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.nio.file.Path;
 import java.util.Objects;
@@ -23,7 +23,7 @@ public class ChessBoard implements Board {
     }
 
     @Override
-    public void gameLoop() {
+    public void runLoop() {
         boolean exit = false;
         Color turn = Color.WHITE;
         Scanner scanner = new Scanner(System.in);
@@ -33,15 +33,15 @@ public class ChessBoard implements Board {
         while (!exit) {
             String[] move = Piece.moveManager.moveQuery(scanner);
 
-            boolean notOnBoard = !Coordinate.onBoard(new Coordinate(move[0]))
-                    || !Coordinate.onBoard(new Coordinate(move[1]));
+            boolean notOnBoard = !BoardCoordinates.onBoard(new BoardCoordinates(move[0]))
+                    || !BoardCoordinates.onBoard(new BoardCoordinates(move[1]));
 
             if (notOnBoard) {
                 System.err.println("At least one of the given coordinates isn't in the board. Please try again!");
                 continue;
             }
-            Coordinate origin = new Coordinate(move[0]);
-            Coordinate destination = new Coordinate(move[1]);
+            BoardCoordinates origin = new BoardCoordinates(move[0]);
+            BoardCoordinates destination = new BoardCoordinates(move[1]);
 
             Piece piece = pieces.getPiece(origin);
 
@@ -66,7 +66,7 @@ public class ChessBoard implements Board {
             } else {
                 stringBuilder.append(ioManager.moveString(pieces, destination, piece)).append(" ");
             }
-            System.out.println(boardManager.displayBoard(pieces));
+            System.out.println(boardManager.display(pieces));
 
             if (pieces.isMate(Color.not(turn))) {
                 System.out.printf("%s win.%n", turn);

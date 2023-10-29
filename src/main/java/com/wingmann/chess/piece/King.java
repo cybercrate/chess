@@ -1,21 +1,21 @@
 package com.wingmann.chess.piece;
 
-import com.wingmann.chess.board.BoardLimit;
+import com.wingmann.chess.util.BoardLimit;
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class King extends Piece implements KingPiece {
-    private Coordinate castleCoordinatesKingK;
-    private Coordinate castleCoordinatesKingQ;
-    private Coordinate transitionCoordinatesKingK;
-    private Coordinate transitionCoordinatesKingQ;
+    private BoardCoordinates castleCoordinatesKingK;
+    private BoardCoordinates castleCoordinatesKingQ;
+    private BoardCoordinates transitionCoordinatesKingK;
+    private BoardCoordinates transitionCoordinatesKingQ;
     private Rook rookKing;
     private Rook rookQueen;
 
-    public King(Color colour, Coordinate coordinate) {
+    public King(Color colour, BoardCoordinates coordinate) {
         super(ID.KING, colour, coordinate);
     }
 
@@ -29,11 +29,11 @@ public class King extends Piece implements KingPiece {
     }
 
     @Override
-    public ArrayList<Coordinate> getRawMoves(PieceState pieces) {
-        ArrayList<Coordinate> front = moveManager.frontFree(pieces,this, single);
-        ArrayList<Coordinate> back = moveManager.backFree(pieces,this, single);
-        ArrayList<Coordinate> frontRDig = moveManager.frontRDigFree(pieces, this, single);
-        ArrayList<Coordinate> backLDig = moveManager.backLDigFree(pieces, this, single);
+    public ArrayList<BoardCoordinates> getRawMoves(PieceState pieces) {
+        ArrayList<BoardCoordinates> front = moveManager.frontFree(pieces,this, single);
+        ArrayList<BoardCoordinates> back = moveManager.backFree(pieces,this, single);
+        ArrayList<BoardCoordinates> frontRDig = moveManager.frontRDigFree(pieces, this, single);
+        ArrayList<BoardCoordinates> backLDig = moveManager.backLDigFree(pieces, this, single);
 
         front.addAll(moveManager.rightFree(pieces,this, single));
         back.addAll(moveManager.leftFree(pieces,this, single));
@@ -56,22 +56,22 @@ public class King extends Piece implements KingPiece {
     }
 
     @Override
-    public Coordinate getCastleCoordinatesKingK() {
+    public BoardCoordinates getCastleCoordinatesKingK() {
         return castleCoordinatesKingK;
     }
 
     @Override
-    public Coordinate getCastleCoordinatesKingQ() {
+    public BoardCoordinates getCastleCoordinatesKingQ() {
         return castleCoordinatesKingQ;
     }
 
     @Override
-    public Coordinate getTransitionCoordinatesKingK() {
+    public BoardCoordinates getTransitionCoordinatesKingK() {
         return transitionCoordinatesKingK;
     }
 
     @Override
-    public Coordinate getTransitionCoordinatesKingQ() {
+    public BoardCoordinates getTransitionCoordinatesKingQ() {
         return transitionCoordinatesKingQ;
     }
 
@@ -90,15 +90,15 @@ public class King extends Piece implements KingPiece {
         if (pieces.isCheck(getColor())) {
             return false;
         }
-        Map<Coordinate, Piece> colouredPieces = pieces.getColourPieces(getColor());
+        Map<BoardCoordinates, Piece> coloredPieces = pieces.getColourPieces(getColor());
 
-        for (Piece value : colouredPieces.values()) {
-            if ((value.getName() == ID.ROOK) && (value.getFile() == BoardLimit.LAST_FILE.getFile())) {
+        for (Piece value : coloredPieces.values()) {
+            if ((value.getName() == ID.ROOK) && (value.getFile() == BoardLimit.LAST_COLUMN.getColumn())) {
                 rookKing = (Rook) value;
             }
         }
         int distanceRookKing = 2;
-        ArrayList<Coordinate> castleCoords;
+        ArrayList<BoardCoordinates> castleCoords;
 
         if (getColor() == Color.BLACK) {
             castleCoords = moveManager.leftFree(pieces, this, dimension);
@@ -128,16 +128,16 @@ public class King extends Piece implements KingPiece {
         if (pieces.isCheck(getColor())) {
             return false;
         }
-        Map<Coordinate,Piece> colouredPieces = pieces.getColourPieces(getColor());
+        Map<BoardCoordinates,Piece> colouredPieces = pieces.getColourPieces(getColor());
 
         for (Piece value : colouredPieces.values()) {
-            if ((value.getName() == ID.ROOK) && (value.getFile() == BoardLimit.FIRST_FILE.getFile())) {
+            if ((value.getName() == ID.ROOK) && (value.getFile() == BoardLimit.FIRST_COLUMN.getColumn())) {
                 rookQueen = (Rook) value;
             }
         }
         int distanceRookQueen = 3;
 
-        ArrayList<Coordinate> castleCoords = (getColor() == Color.WHITE)
+        ArrayList<BoardCoordinates> castleCoords = (getColor() == Color.WHITE)
                 ? moveManager.leftFree(pieces, this, dimension)
                 : moveManager.rightFree(pieces, this, dimension);
 

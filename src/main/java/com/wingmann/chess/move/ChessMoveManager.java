@@ -3,7 +3,7 @@ package com.wingmann.chess.move;
 import com.wingmann.chess.piece.Piece;
 import com.wingmann.chess.piece.PieceState;
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -14,7 +14,7 @@ public class ChessMoveManager implements MoveManager {
     private static final String nullCoord = "Board coordinates must not be null.";
 
     @Override
-    public boolean isNotTileColor(PieceState pieces, Coordinate destination, Color color) {
+    public boolean isNotTileColor(PieceState pieces, BoardCoordinates destination, Color color) {
         Objects.requireNonNull(pieces, nullPieces);
         Objects.requireNonNull(destination, nullCoord);
 
@@ -22,7 +22,7 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public boolean tileFull(PieceState pieces, Coordinate destination) {
+    public boolean tileFull(PieceState pieces, BoardCoordinates destination) {
         Objects.requireNonNull(pieces, nullPieces);
         Objects.requireNonNull(destination, nullCoord);
 
@@ -30,62 +30,62 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> frontFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> frontFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? -1 : 1;
 
         return getCoordinates(pieces, piece, limit, moves, factor);
     }
 
-    private ArrayList<Coordinate> getCoordinates(
+    private ArrayList<BoardCoordinates> getCoordinates(
             PieceState pieces,
             Piece piece,
             int limit,
-            ArrayList<Coordinate> moves,
+            ArrayList<BoardCoordinates> moves,
             int factor) {
         for (int advance = 1; advance <= limit; ++advance) {
             int change = factor * advance;
-            Coordinate checkCoord = new Coordinate(piece.getFile(), piece.getRank() + change);
+            BoardCoordinates checkCoords = new BoardCoordinates(piece.getFile(), piece.getRank() + change);
 
-            if (check(pieces, piece, moves, checkCoord)) {
+            if (check(pieces, piece, moves, checkCoords)) {
                 return moves;
             }
         }
         return moves;
     }
 
-    private boolean check(PieceState pieces, Piece piece, ArrayList<Coordinate> moves, Coordinate checkCoord) {
-        if (Coordinate.onBoard(checkCoord)) {
-            boolean occupiedTile = tileFull(pieces, checkCoord);
+    private boolean check(PieceState pieces, Piece piece, ArrayList<BoardCoordinates> moves, BoardCoordinates checkCoords) {
+        if (BoardCoordinates.onBoard(checkCoords)) {
+            boolean occupiedTile = tileFull(pieces, checkCoords);
 
-            if (occupiedTile && isNotTileColor(pieces, checkCoord, piece.getColor())) {
-                moves.add(checkCoord);
+            if (occupiedTile && isNotTileColor(pieces, checkCoords, piece.getColor())) {
+                moves.add(checkCoords);
                 return true;
             } else if (occupiedTile) {
                 return true;
             } else {
-                moves.add(checkCoord);
+                moves.add(checkCoords);
             }
         }
         return false;
     }
 
     @Override
-    public ArrayList<Coordinate> backFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> backFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? 1 : -1;
 
         return getCoordinates(pieces, piece, limit, moves, factor);
     }
 
     @Override
-    public ArrayList<Coordinate> rightFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> rightFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? -1 : 1;
 
         for (int advance = 1; advance <= limit; advance++) {
             int change = factor*advance;
-            Coordinate checkCoord = new Coordinate((char) (piece.getFile()+change),piece.getRank());
+            BoardCoordinates checkCoord = new BoardCoordinates((char) (piece.getFile()+change),piece.getRank());
 
             if (check(pieces, piece, moves, checkCoord)) {
                 return moves;
@@ -95,21 +95,21 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> leftFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> leftFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? 1 : -1;
 
         for (int advance = 1; advance <= limit; advance++) {
             int change = factor*advance;
-            Coordinate checkCoord = new Coordinate((char) (piece.getFile()+change),piece.getRank());
+            BoardCoordinates checkCoord = new BoardCoordinates((char) (piece.getFile()+change),piece.getRank());
             if (check(pieces, piece, moves, checkCoord)) return moves;
         }
         return moves;
     }
 
     @Override
-    public ArrayList<Coordinate> frontRDigFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> frontRDigFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factorV;
         int factorH;
 
@@ -118,9 +118,9 @@ public class ChessMoveManager implements MoveManager {
         for (int advance = 1; advance <= limit; advance++) {
             int changeV = factorV * advance;
             int changeH = factorH * advance;
-            Coordinate checkCoord = new Coordinate((char) (piece.getFile() + changeV),piece.getRank() + changeH);
+            BoardCoordinates checkCoord = new BoardCoordinates((char) (piece.getFile() + changeV),piece.getRank() + changeH);
 
-            if (Coordinate.onBoard(checkCoord)) {
+            if (BoardCoordinates.onBoard(checkCoord)) {
                 boolean occupiedTile = tileFull(pieces, checkCoord);
 
                 if (occupiedTile && isNotTileColor(pieces, checkCoord, piece.getColor())) {
@@ -137,8 +137,8 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> backRDigFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> backRDigFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         boolean isBlack = piece.getColor().equals(Color.BLACK);
 
         int factorV = isBlack ? -1 : 1;
@@ -148,9 +148,9 @@ public class ChessMoveManager implements MoveManager {
             int changeV = factorV * advance;
             int changeH = factorH * advance;
 
-            Coordinate checkCoord = new Coordinate((char) (piece.getFile() + changeV),piece.getRank() + changeH);
+            BoardCoordinates checkCoords = new BoardCoordinates((char) (piece.getFile() + changeV),piece.getRank() + changeH);
 
-            if (check(pieces, piece, moves, checkCoord)) {
+            if (check(pieces, piece, moves, checkCoords)) {
                 return moves;
             }
         }
@@ -158,8 +158,8 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> backLDigFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> backLDigFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factorV;
         int factorH;
 
@@ -168,15 +168,15 @@ public class ChessMoveManager implements MoveManager {
         for (int advance = 1; advance <= limit; advance++) {
             int changeV = factorV * advance;
             int changeH = factorH * advance;
-            Coordinate checkCoord = new Coordinate((char) (piece.getFile()+changeV),piece.getRank()+changeH);
-            if (check(pieces, piece, moves, checkCoord)) return moves;
+            BoardCoordinates checkCoords = new BoardCoordinates((char) (piece.getFile()+changeV),piece.getRank()+changeH);
+            if (check(pieces, piece, moves, checkCoords)) return moves;
         }
         return moves;
     }
 
     @Override
-    public ArrayList<Coordinate> frontLDigFree(PieceState pieces, Piece piece, int limit) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> frontLDigFree(PieceState pieces, Piece piece, int limit) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         boolean isBlack = piece.getColor().equals(Color.BLACK);
 
         int factorV = isBlack ? 1 : -1;
@@ -186,9 +186,9 @@ public class ChessMoveManager implements MoveManager {
             int changeV = factorV * advance;
             int changeH = factorH * advance;
 
-            Coordinate checkCoord = new Coordinate((char) (piece.getFile() + changeV),piece.getRank() + changeH);
+            BoardCoordinates checkCoords = new BoardCoordinates((char) (piece.getFile() + changeV),piece.getRank() + changeH);
 
-            if (check(pieces, piece, moves, checkCoord)) {
+            if (check(pieces, piece, moves, checkCoords)) {
                 return moves;
             }
         }
@@ -196,17 +196,17 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> frontKnight(PieceState pieces, Piece piece) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> frontKnight(PieceState pieces, Piece piece) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? -1 : 1;
         int sideDistance = 1;
         int changeV = 2 * factor;
         int newRank = piece.getRank() + changeV;
 
-        Coordinate frontRight = new Coordinate((char) (piece.getFile() + sideDistance),newRank);
-        Coordinate frontLeft = new Coordinate((char) (piece.getFile() - sideDistance),newRank);
+        BoardCoordinates frontRight = new BoardCoordinates((char) (piece.getFile() + sideDistance),newRank);
+        BoardCoordinates frontLeft = new BoardCoordinates((char) (piece.getFile() - sideDistance),newRank);
 
-        if (Coordinate.onBoard(frontLeft)) {
+        if (BoardCoordinates.onBoard(frontLeft)) {
             boolean occupiedTile = tileFull(pieces, frontLeft);
 
             if (!occupiedTile || isNotTileColor(pieces, frontLeft, piece.getColor())) {
@@ -214,7 +214,7 @@ public class ChessMoveManager implements MoveManager {
             }
         }
 
-        if (Coordinate.onBoard(frontRight)) {
+        if (BoardCoordinates.onBoard(frontRight)) {
             boolean occupiedTile = tileFull(pieces, frontRight);
 
             if (!occupiedTile || isNotTileColor(pieces, frontRight, piece.getColor())) {
@@ -225,17 +225,17 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> backKnight(PieceState pieces, Piece piece) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> backKnight(PieceState pieces, Piece piece) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? 1 : -1;
         int sideDistance = 1;
         int changeV = 2 * factor;
         int newRank = piece.getRank() + changeV;
 
-        Coordinate backRight = new Coordinate((char) (piece.getFile() + sideDistance),newRank);
-        Coordinate backLeft = new Coordinate((char) (piece.getFile() - sideDistance),newRank);
+        BoardCoordinates backRight = new BoardCoordinates((char) (piece.getFile() + sideDistance),newRank);
+        BoardCoordinates backLeft = new BoardCoordinates((char) (piece.getFile() - sideDistance),newRank);
 
-        if (Coordinate.onBoard(backLeft)) {
+        if (BoardCoordinates.onBoard(backLeft)) {
             boolean occupiedTile = tileFull(pieces, backLeft);
 
             if (!occupiedTile || isNotTileColor(pieces, backLeft, piece.getColor())) {
@@ -243,7 +243,7 @@ public class ChessMoveManager implements MoveManager {
             }
         }
 
-        if (Coordinate.onBoard(backRight)) {
+        if (BoardCoordinates.onBoard(backRight)) {
             boolean occupiedTile = tileFull(pieces, backRight);
 
             if (!occupiedTile || isNotTileColor(pieces, backRight, piece.getColor())) {
@@ -254,17 +254,17 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> rightKnight(PieceState pieces, Piece piece) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> rightKnight(PieceState pieces, Piece piece) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? -1 : 1;
         int sideDistance = 1;
         int changeH = 2 * factor;
         char newFile = (char) (piece.getFile() + changeH);
 
-        Coordinate rightTop = new Coordinate(newFile,piece.getRank() + sideDistance);
-        Coordinate rightBottom = new Coordinate(newFile, piece.getRank() - sideDistance);
+        BoardCoordinates rightTop = new BoardCoordinates(newFile,piece.getRank() + sideDistance);
+        BoardCoordinates rightBottom = new BoardCoordinates(newFile, piece.getRank() - sideDistance);
 
-        if (Coordinate.onBoard(rightTop)) {
+        if (BoardCoordinates.onBoard(rightTop)) {
             boolean occupiedTile = tileFull(pieces, rightTop);
 
             if (!occupiedTile || isNotTileColor(pieces, rightTop, piece.getColor())) {
@@ -272,7 +272,7 @@ public class ChessMoveManager implements MoveManager {
             }
         }
 
-        if (Coordinate.onBoard(rightBottom)) {
+        if (BoardCoordinates.onBoard(rightBottom)) {
             boolean occupiedTile = tileFull(pieces, rightBottom);
 
             if (!occupiedTile || isNotTileColor(pieces, rightBottom, piece.getColor())) {
@@ -283,17 +283,17 @@ public class ChessMoveManager implements MoveManager {
     }
 
     @Override
-    public ArrayList<Coordinate> leftKnight(PieceState pieces, Piece piece) {
-        ArrayList<Coordinate> moves = new ArrayList<>();
+    public ArrayList<BoardCoordinates> leftKnight(PieceState pieces, Piece piece) {
+        ArrayList<BoardCoordinates> moves = new ArrayList<>();
         int factor = piece.getColor().equals(Color.BLACK) ? 1 : -1;
         int sideDistance = 1;
         int changeH = 2 * factor;
         char newFile = (char) (piece.getFile() + changeH);
 
-        Coordinate leftTop = new Coordinate(newFile,piece.getRank() + sideDistance);
-        Coordinate leftBottom = new Coordinate(newFile, piece.getRank() - sideDistance);
+        BoardCoordinates leftTop = new BoardCoordinates(newFile,piece.getRank() + sideDistance);
+        BoardCoordinates leftBottom = new BoardCoordinates(newFile, piece.getRank() - sideDistance);
 
-        if (Coordinate.onBoard(leftBottom)) {
+        if (BoardCoordinates.onBoard(leftBottom)) {
             boolean occupiedTile = tileFull(pieces, leftBottom);
 
             if (!occupiedTile || isNotTileColor(pieces, leftBottom, piece.getColor())) {
@@ -301,7 +301,7 @@ public class ChessMoveManager implements MoveManager {
             }
         }
 
-        if (Coordinate.onBoard(leftTop)) {
+        if (BoardCoordinates.onBoard(leftTop)) {
             boolean occupiedTile = tileFull(pieces, leftTop);
 
             if (!occupiedTile || isNotTileColor(pieces, leftTop, piece.getColor())) {

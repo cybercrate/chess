@@ -3,21 +3,21 @@ package com.wingmann.chess.move;
 import com.wingmann.chess.piece.Piece;
 import com.wingmann.chess.piece.PieceState;
 import com.wingmann.chess.util.Color;
-import com.wingmann.chess.util.Coordinate;
+import com.wingmann.chess.util.BoardCoordinates;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public interface MoveManager extends KnightMove {
-    boolean isNotTileColor(PieceState pieces, Coordinate destination, Color color);
-    boolean tileFull(PieceState pieces, Coordinate destination);
-    ArrayList<Coordinate> frontFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> backFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> rightFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> leftFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> frontRDigFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> backRDigFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> backLDigFree(PieceState pieces, Piece piece, int limit);
-    ArrayList<Coordinate> frontLDigFree(PieceState pieces, Piece piece, int limit);
+    boolean isNotTileColor(PieceState pieces, BoardCoordinates destination, Color color);
+    boolean tileFull(PieceState pieces, BoardCoordinates destination);
+    ArrayList<BoardCoordinates> frontFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> backFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> rightFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> leftFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> frontRDigFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> backRDigFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> backLDigFree(PieceState pieces, Piece piece, int limit);
+    ArrayList<BoardCoordinates> frontLDigFree(PieceState pieces, Piece piece, int limit);
     String[] moveQuery(Scanner scanner);
 }
