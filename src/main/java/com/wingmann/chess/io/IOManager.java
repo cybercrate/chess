@@ -8,7 +8,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public interface IOManager {
-    String moveString(PieceState pieces, BoardCoordinates coords, Piece piece);
+    String moveString(PieceState state, BoardCoordinates coords, Piece piece);
     Path fileQuery(Scanner in);
-    boolean saveGame(String game, Path saveFile);
+    boolean save(String game, Path saveFile);
 }

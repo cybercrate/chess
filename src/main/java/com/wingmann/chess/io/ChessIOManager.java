@@ -18,69 +18,71 @@ import java.util.Scanner;
 
 public class ChessIOManager implements IOManager {
     @Override
-    public String moveString(PieceState pieces, BoardCoordinates coords, Piece piece) {
+    public String moveString(PieceState state, BoardCoordinates coords, Piece piece) {
         boolean isCastle = false;
 
-        StringBuilder str = new StringBuilder();
-        PieceState previousBoard = new PieceState(pieces.getPreviousPieces());
+        StringBuilder stringBuilder = new StringBuilder();
+        PieceState previousBoard = new PieceState(state.getPreviousPieces());
         BoardCoordinates previousCoordinate = previousBoard.findPiece(piece);
         Piece previousPiece = previousBoard.getPiece(previousCoordinate);
 
         if (piece.getName() != ID.KING) {
-            str.append(piece.getName().toString());
+            stringBuilder.append(piece.getName().toString());
         } else {
             King king = (King) piece;
             King previousKing = (King) previousPiece;
 
             if (coords.equals(king.getCastleCoordinatesKingQ())
                     && previousKing.canCastleQueen(previousBoard)) {
-                str.append("O-O-O");
+                stringBuilder.append("O-O-O");
                 isCastle = true;
             } else if (coords.equals(king.getCastleCoordinatesKingK())
                     && previousKing.canCastleKing(previousBoard)) {
-                str.append("O-O");
+                stringBuilder.append("O-O");
                 isCastle = true;
             } else {
-                str.append(piece.getName().toString());
+                stringBuilder.append(piece.getName().toString());
             }
         }
-        str.append(removeAmbiguous(previousBoard, coords, previousPiece));
+        stringBuilder.append(removeAmbiguous(previousBoard, coords, previousPiece));
 
-        if (pieces.isCapture()) {
+        if (state.isCapture()) {
             if (piece.getName() == ID.PAWN) {
                 assert piece instanceof Pawn;
                 Pawn pawn = (Pawn) piece;
-                str.append(pawn.getPreviousCoordinate().getColumn()).append("x");
+                stringBuilder.append(pawn.getPreviousCoordinate().getColumn()).append("x");
             } else {
-                str.append("x");
+                stringBuilder.append("x");
             }
         }
 
         if (!isCastle) {
-            str.append(coords.toString());
+            stringBuilder.append(coords.toString());
         }
 
         if (piece.getName() == ID.PAWN) {
             Pawn pawn = (Pawn) piece;
 
             if (pawn.canPromoteBlack(coords) || pawn.canPromoteWhite(coords)) {
-                str.append("=").append(pawn.getPromotedPiece().getName().toString());
+                stringBuilder
+                        .append("=")
+                        .append(pawn.getPromotedPiece().getName().toString());
             }
         }
 
-        if (pieces.isMate(Color.invert(piece.getColor()))) {
-            str.append("#");
-        } else if (pieces.isCheck(Color.invert(piece.getColor()))) {
-            str.append("+");
+        if (state.isMate(Color.invert(piece.getColor()))) {
+            stringBuilder.append("#");
+        } else if (state.isCheck(Color.invert(piece.getColor()))) {
+            stringBuilder.append("+");
         }
-        return str.toString();
+        return stringBuilder.toString();
     }
 
-    private String removeAmbiguous(PieceState pieces, BoardCoordinates coords, Piece piece) {
-        if (pieces.pieceToSameCoordinate(coords, piece)) {
-            if (pieces.pieceInSameRow(piece)) {
+    private String removeAmbiguous(PieceState state, BoardCoordinates coords, Piece piece) {
+        if (state.pieceToSameCoordinate(coords, piece)) {
+            if (state.pieceInSameRow(piece)) {
                 return String.valueOf(piece.getFile());
-            } else if (pieces.pieceInSameColumn(piece)) {
+            } else if (state.pieceInSameColumn(piece)) {
                 return String.valueOf(piece.getRank());
             } else {
                 return "";
@@ -98,11 +100,11 @@ public class ChessIOManager implements IOManager {
     }
 
     @Override
-    public boolean saveGame(String game, Path saveFile) {
-        Objects.requireNonNull(game,"You can't have a null game!");
-        Objects.requireNonNull(saveFile,"You can't save a game to a null path!");
+    public boolean save(String game, Path file) {
+        Objects.requireNonNull(game,"You cannot have a null game!");
+        Objects.requireNonNull(file,"You cannot save a game to a null path!");
 
-        String path = String.valueOf(saveFile);
+        String path = String.valueOf(file);
         File gameFile = new File(path);
 
         if (!gameFile.exists()) {

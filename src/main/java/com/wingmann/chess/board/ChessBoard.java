@@ -86,7 +86,7 @@ public class ChessBoard implements Board {
                     case "save" -> {
                         Path filePath = ioManager.fileQuery(scanner);
 
-                        if (ioManager.saveGame(stringBuilder.toString(), filePath)) {
+                        if (ioManager.save(stringBuilder.toString(), filePath)) {
                             System.out.printf("Game saved successfully on path %s%n", filePath);
                         } else {
                             System.out.printf("There was an error saving the file on the path %s%n", filePath);
