@@ -122,7 +122,7 @@ public abstract class Piece {
             PieceState p = new PieceState(pieces);
             p.pieceMove(nextMove, this.makeCopy());
             BoardCoordinates kingPosition = p.findKing(getColor());
-            Set<BoardCoordinates> dangerMoves = p.allColouredRaws(Color.not(getColor()));
+            Set<BoardCoordinates> dangerMoves = p.allColouredRaws(Color.invert(getColor()));
 
             if (dangerMoves.contains(kingPosition)) {
                 if (this.getName() == ID.KING) {

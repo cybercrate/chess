@@ -67,16 +67,6 @@ public class PieceState implements State {
         return pieces;
     }
 
-    @Override
-    public void setPieces(Map<BoardCoordinates, Piece> pieces) {
-        this.pieces = pieces;
-    }
-
-    @Override
-    public boolean getIsCapture() {
-        return isCapture;
-    }
-
     private void setIsCapture() {
         this.isCapture = true;
     }
@@ -139,7 +129,7 @@ public class PieceState implements State {
     }
 
     @Override
-    public Map<BoardCoordinates, Piece> getColourPieces(Color color) {
+    public Map<BoardCoordinates, Piece> getColorPieces(Color color) {
         Map<BoardCoordinates,Piece> colours = new HashMap<>();
 
         for (BoardCoordinates key : pieces.keySet()) {
@@ -154,7 +144,7 @@ public class PieceState implements State {
 
     private Set<BoardCoordinates> allColouredPotentials (Color color) {
         Set<BoardCoordinates> allMoves = new HashSet<>();
-        Map<BoardCoordinates, Piece> allColoured = getColourPieces(color);
+        Map<BoardCoordinates, Piece> allColoured = getColorPieces(color);
 
         for (Piece piece : allColoured.values()){
             allMoves.addAll(piece.getPotentialMoves());
@@ -165,7 +155,7 @@ public class PieceState implements State {
     @Override
     public Set<BoardCoordinates> allColouredRaws(Color color) {
         Set<BoardCoordinates> allMoves = new HashSet<>();
-        Map<BoardCoordinates, Piece> allColoured = getColourPieces(color);
+        Map<BoardCoordinates, Piece> allColoured = getColorPieces(color);
 
         for (Piece piece : allColoured.values()){
             allMoves.addAll(piece.getRawMoves(this));
@@ -183,11 +173,16 @@ public class PieceState implements State {
     }
 
     @Override
-    public boolean pieceInSameFile (Piece piece) {
+    public boolean isCapture() {
+        return isCapture;
+    }
+
+    @Override
+    public boolean pieceInSameColumn(Piece piece) {
         if (piece.getName() == ID.KING) {
             return false;
         }
-        Map<BoardCoordinates, Piece> coloured = getColourPieces(piece.getColor());
+        Map<BoardCoordinates, Piece> coloured = getColorPieces(piece.getColor());
 
         for (Piece value : coloured.values()) {
             if (value.getName() == piece.getName() && value.getFile() == piece.getFile() && !value.equals(piece)) {
@@ -198,11 +193,11 @@ public class PieceState implements State {
     }
 
     @Override
-    public boolean pieceInSameRank (Piece piece) {
+    public boolean pieceInSameRow(Piece piece) {
         if (piece.getName() == ID.KING) {
             return false;
         }
-        Map<BoardCoordinates, Piece> coloured = getColourPieces(piece.getColor());
+        Map<BoardCoordinates, Piece> coloured = getColorPieces(piece.getColor());
 
         for (Piece value : coloured.values()) {
             if (value.getName() == piece.getName() && value.getRank() == piece.getRank() && !value.equals(piece)) {
@@ -219,7 +214,7 @@ public class PieceState implements State {
         if (piece.getName() == ID.KING) {
             return false;
         }
-        Map<BoardCoordinates, Piece> coloured = getColourPieces(piece.getColor());
+        Map<BoardCoordinates, Piece> coloured = getColorPieces(piece.getColor());
 
         for (Piece value : coloured.values()) {
             if (value.getName() == piece.getName()
@@ -238,7 +233,7 @@ public class PieceState implements State {
         if (kingPosition.equals(BoardCoordinates.EMPTY_COORDS)) {
             throw new IllegalArgumentException("There is no king in the board. This is an illegal game!");
         }
-        Set<BoardCoordinates> dangerMoves = allColouredPotentials(Color.not(color));
+        Set<BoardCoordinates> dangerMoves = allColouredPotentials(Color.invert(color));
         return (dangerMoves.contains(kingPosition));
     }
 
@@ -312,8 +307,13 @@ public class PieceState implements State {
 
     @Override
     public boolean isStalemate(Color color) {
-        Set<BoardCoordinates> allMoves = allColouredPotentials(Color.not(color));
-        return allMoves.isEmpty() && !isCheck(Color.not(color));
+        Set<BoardCoordinates> allMoves = allColouredPotentials(Color.invert(color));
+        return allMoves.isEmpty() && !isCheck(Color.invert(color));
+    }
+
+    @Override
+    public void setPieces(Map<BoardCoordinates, Piece> pieces) {
+        this.pieces = pieces;
     }
 
     @Override

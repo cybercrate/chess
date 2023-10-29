@@ -90,7 +90,7 @@ public class King extends Piece implements KingPiece {
         if (pieces.isCheck(getColor())) {
             return false;
         }
-        Map<BoardCoordinates, Piece> coloredPieces = pieces.getColourPieces(getColor());
+        Map<BoardCoordinates, Piece> coloredPieces = pieces.getColorPieces(getColor());
 
         for (Piece value : coloredPieces.values()) {
             if ((value.getName() == ID.ROOK) && (value.getFile() == BoardLimit.LAST_COLUMN.getColumn())) {
@@ -128,7 +128,7 @@ public class King extends Piece implements KingPiece {
         if (pieces.isCheck(getColor())) {
             return false;
         }
-        Map<BoardCoordinates,Piece> colouredPieces = pieces.getColourPieces(getColor());
+        Map<BoardCoordinates,Piece> colouredPieces = pieces.getColorPieces(getColor());
 
         for (Piece value : colouredPieces.values()) {
             if ((value.getName() == ID.ROOK) && (value.getFile() == BoardLimit.FIRST_COLUMN.getColumn())) {

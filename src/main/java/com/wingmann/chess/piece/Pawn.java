@@ -139,7 +139,7 @@ public class Pawn extends Piece implements PawnPiece {
 
             boolean correctPiece = moveManager.tileFull(pieces,leftTile)
                     && pieces.getPiece(leftTile).getName() == ID.PAWN
-                    && pieces.getPiece(leftTile).getColor() == Color.not(getColor());
+                    && pieces.getPiece(leftTile).getColor() == Color.invert(getColor());
 
             if (correctPiece) {
                 Pawn potentialPawn = (Pawn) pieces.getPiece(leftTile);
@@ -160,7 +160,7 @@ public class Pawn extends Piece implements PawnPiece {
 
             boolean correctPiece = moveManager.tileFull(pieces,rightTile)
                     && pieces.getPiece(rightTile).getName() == ID.PAWN
-                    && pieces.getPiece(rightTile).getColor() == Color.not(getColor());
+                    && pieces.getPiece(rightTile).getColor() == Color.invert(getColor());
 
             if (correctPiece) {
                 Pawn potentialPawn = (Pawn) pieces.getPiece(rightTile);

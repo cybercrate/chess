@@ -26,7 +26,7 @@ public enum Color {
 
     public abstract String toShortString();
 
-    public static Color not(Color color) {
+    public static Color invert(Color color) {
         return (color == BLACK) ? WHITE : BLACK;
     }
 }

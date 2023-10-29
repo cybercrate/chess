@@ -68,7 +68,7 @@ public class ChessBoard implements Board {
             }
             System.out.println(boardManager.display(pieces));
 
-            if (pieces.isMate(Color.not(turn))) {
+            if (pieces.isMate(Color.invert(turn))) {
                 System.out.printf("%s win.%n", turn);
                 exit = true;
             } else if (pieces.isStalemate(turn)) {
@@ -95,7 +95,7 @@ public class ChessBoard implements Board {
                 }
 
                 if (!exit) {
-                    turn = Color.not(turn);
+                    turn = Color.invert(turn);
                     System.out.printf("%s to move.%n", turn);
                 }
             }

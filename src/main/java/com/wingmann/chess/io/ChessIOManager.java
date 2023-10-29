@@ -46,7 +46,7 @@ public class ChessIOManager implements IOManager {
         }
         str.append(removeAmbiguous(previousBoard, coords, previousPiece));
 
-        if (pieces.getIsCapture()) {
+        if (pieces.isCapture()) {
             if (piece.getName() == ID.PAWN) {
                 assert piece instanceof Pawn;
                 Pawn pawn = (Pawn) piece;
@@ -68,9 +68,9 @@ public class ChessIOManager implements IOManager {
             }
         }
 
-        if (pieces.isMate(Color.not(piece.getColor()))) {
+        if (pieces.isMate(Color.invert(piece.getColor()))) {
             str.append("#");
-        } else if (pieces.isCheck(Color.not(piece.getColor()))) {
+        } else if (pieces.isCheck(Color.invert(piece.getColor()))) {
             str.append("+");
         }
         return str.toString();
@@ -78,9 +78,9 @@ public class ChessIOManager implements IOManager {
 
     private String removeAmbiguous(PieceState pieces, BoardCoordinates coords, Piece piece) {
         if (pieces.pieceToSameCoordinate(coords, piece)) {
-            if (pieces.pieceInSameRank(piece)) {
+            if (pieces.pieceInSameRow(piece)) {
                 return String.valueOf(piece.getFile());
-            } else if (pieces.pieceInSameFile(piece)) {
+            } else if (pieces.pieceInSameColumn(piece)) {
                 return String.valueOf(piece.getRank());
             } else {
                 return "";
