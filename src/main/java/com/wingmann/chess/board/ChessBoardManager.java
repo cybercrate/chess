@@ -3,6 +3,7 @@ package com.wingmann.chess.board;
 import com.wingmann.chess.piece.*;
 import com.wingmann.chess.util.BoardLimit;
 import com.wingmann.chess.util.BoardCoordinates;
+import com.wingmann.chess.util.Color;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,10 +13,56 @@ public class ChessBoardManager implements BoardManager {
     public Map<BoardCoordinates, Piece> get() {
         Map<BoardCoordinates, Piece> pieces = new HashMap<>();
 
-        BoardPiecesFactory.getBlack(pieces);
-        BoardPiecesFactory.getWhite(pieces);
+        generate(Color.BLACK, pieces);
+        generate(Color.WHITE, pieces);
 
         return pieces;
+    }
+
+    private void generate(Color color, Map<BoardCoordinates, Piece> pieces) {
+        final int pawnRow;
+        final int row;
+
+        if (color == Color.BLACK) {
+            pawnRow = 7;
+            row = 8;
+        } else {
+            pawnRow = 2;
+            row = 1;
+        }
+
+        char column = 'a';
+
+        for (int i = 0; i < 8; i++, column++) {
+            BoardCoordinates current = new BoardCoordinates(column, pawnRow);
+            pieces.put(current, new Pawn(color, current));
+        }
+
+        Piece current;
+
+        current = new Rook(color, new BoardCoordinates('a', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new Rook(color, new BoardCoordinates('h', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new Knight(color, new BoardCoordinates('b', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new Knight(color, new BoardCoordinates('g', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new Bishop(color, new BoardCoordinates('c', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new Bishop(color, new BoardCoordinates('f', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new Queen(color, new BoardCoordinates('d', row));
+        pieces.put(current.getCoords(), current);
+
+        current = new King(color, new BoardCoordinates('e', row));
+        pieces.put(current.getCoords(), current);
     }
 
     @Override
@@ -24,43 +71,40 @@ public class ChessBoardManager implements BoardManager {
         char dimColumn = BoardLimit.FIRST_COLUMN.getColumn();
         char lastColumn = BoardLimit.LAST_COLUMN.getColumn();
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("%s%n%s%n", columnIndex(), separator()));
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%s%n%s%n", getColumnIndex(), getSeparator()));
 
         for (int row = 8; row >= dimRow; row--) {
-            stringBuilder.append(String.format("%s|", spacer(row,"L")));
+            sb.append(String.format("%s|", getSpacer(row,true)));
+            Piece piece;
 
             for (char column = dimColumn; column <= lastColumn; column++) {
                 BoardCoordinates coords = new BoardCoordinates(column, row);
-                Piece piece = pieces.getPieces().get(coords);
+                piece = pieces.getPieces().get(coords);
 
-                if (piece != null) {
-                    stringBuilder.append(String.format(" %s |", piece.toBoardString()));
-                } else {
-                    stringBuilder.append("    |");
-                }
+                sb.append(piece != null ? String.format(" %s |", piece.toBoardString()) : "    |");
             }
-            stringBuilder.append(String.format("%s%n%s%n", spacer(row,"R"), separator()));
+            sb.append(String.format("%s%n%s%n", getSpacer(row,false), getSeparator()));
         }
 
-        stringBuilder.append(String.format("%s%n", columnIndex()));
-        return stringBuilder.toString();
+        sb.append(String.format("%s%n", getColumnIndex()));
+        return sb.toString();
     }
 
-    private String spacer(int n, String type) {
-        return String.format(type.equals("L") ? "%s " : " %s", n);
+    private String getSpacer(int row, boolean leftSide) {
+        return String.format(leftSide ? "%s " : " %s", row);
     }
 
-    private String columnIndex() {
-        StringBuilder stringBuilder = new StringBuilder("   ");
+    private String getColumnIndex() {
+        StringBuilder sb = new StringBuilder("   ");
 
         for (char column = 'A'; column <= 'H'; column++) {
-            stringBuilder.append(String.format(" %s   ", column));
+            sb.append(String.format(" %s   ", column));
         }
-        return stringBuilder.toString();
+        return sb.toString();
     }
 
-    private String separator() {
+    private String getSeparator() {
         return String.format("  %s|", "|====".repeat(8));
     }
 }
