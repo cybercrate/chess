@@ -20,37 +20,30 @@ public class ChessBoardManager implements BoardManager {
 
     @Override
     public String display(PieceState pieces) {
-        int dimRank = BoardLimit.FIRST_ROW.getRow();
-        char dimFile = BoardLimit.FIRST_COLUMN.getColumn();
-        char lastFile = BoardLimit.LAST_COLUMN.getColumn();
+        int dimRow = BoardLimit.FIRST_ROW.getRow();
+        char dimColumn = BoardLimit.FIRST_COLUMN.getColumn();
+        char lastColumn = BoardLimit.LAST_COLUMN.getColumn();
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder
-                .append(columnIndex())
-                .append("\n")
-                .append(separator())
-                .append("\n");
+        stringBuilder.append(String.format("%s%n%s%n", columnIndex(), separator()));
 
-        for (int rank = 8; rank >= dimRank; --rank) {
-            stringBuilder
-                    .append(spacer(rank,"L"))
-                    .append("|");
+        for (int row = 8; row >= dimRow; row--) {
+            stringBuilder.append(String.format("%s|", spacer(row,"L")));
 
-            for (char file = dimFile; file <= lastFile; file++) {
-                BoardCoordinates coords = new BoardCoordinates(file, rank);
-                boolean correctCoordinates = pieces.getPieces().get(coords) != null;
+            for (char column = dimColumn; column <= lastColumn; column++) {
+                BoardCoordinates coords = new BoardCoordinates(column, row);
+                Piece piece = pieces.getPieces().get(coords);
 
-                stringBuilder.append(correctCoordinates
-                        ? String.format(" %s |", pieces.getPieces().get(coords).toBoardString())
-                        : "    |");
+                if (piece != null) {
+                    stringBuilder.append(String.format(" %s |", piece.toBoardString()));
+                } else {
+                    stringBuilder.append("    |");
+                }
             }
-            stringBuilder
-                    .append(spacer(rank,"R"))
-                    .append("\n")
-                    .append(separator())
-                    .append("\n");
+            stringBuilder.append(String.format("%s%n%s%n", spacer(row,"R"), separator()));
         }
-        stringBuilder.append(columnIndex()).append("\n");
+
+        stringBuilder.append(String.format("%s%n", columnIndex()));
         return stringBuilder.toString();
     }
 
@@ -59,14 +52,10 @@ public class ChessBoardManager implements BoardManager {
     }
 
     private String columnIndex() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("   ");
+        StringBuilder stringBuilder = new StringBuilder("   ");
 
-        for (char file = 'a'; file <= 'h'; ++file) {
-            stringBuilder
-                    .append(" ")
-                    .append(file)
-                    .append("   ");
+        for (char column = 'A'; column <= 'H'; column++) {
+            stringBuilder.append(String.format(" %s   ", column));
         }
         return stringBuilder.toString();
     }
