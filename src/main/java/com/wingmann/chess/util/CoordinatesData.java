@@ -13,9 +13,4 @@ public class CoordinatesData {
         this.column = column;
         this.row = row;
     }
-
-    public CoordinatesData(CoordinatesData original) {
-        this.column = original.column;
-        this.row = original.row;
-    }
 }

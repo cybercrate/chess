@@ -19,11 +19,11 @@ public class BoardCoordinates implements Coordinates {
     }
 
     public BoardCoordinates(String coords) {
-        boolean isValidFormat = (coords.length() == 2)
+        boolean isValid = (coords.length() == 2)
                 && Character.isLetter(coords.charAt(0))
                 && Character.isDigit(coords.charAt(1));
 
-        if (isValidFormat) {
+        if (isValid) {
             this.data = new CoordinatesData(
                     Character.toLowerCase(coords.charAt(0)),
                     Character.getNumericValue(coords.charAt(1)));
