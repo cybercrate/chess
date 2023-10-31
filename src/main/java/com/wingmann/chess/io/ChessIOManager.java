@@ -21,61 +21,61 @@ public class ChessIOManager implements IOManager {
     public String moveString(PieceState state, BoardCoordinates coords, Piece piece) {
         boolean isCastle = false;
 
-        StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         PieceState previousBoard = new PieceState(state.getPreviousPieces());
-        BoardCoordinates previousCoordinate = previousBoard.findPiece(piece);
-        Piece previousPiece = previousBoard.getPiece(previousCoordinate);
+
+        BoardCoordinates previousCoords = previousBoard.findPiece(piece);
+        Piece previousPiece = previousBoard.getPiece(previousCoords);
 
         if (piece.getName() != ID.KING) {
-            stringBuilder.append(piece.getName().toString());
+            sb.append(piece.getName().toString());
         } else {
             King king = (King) piece;
             King previousKing = (King) previousPiece;
 
-            if (coords.equals(king.getCastleCoordinatesKingQ())
-                    && previousKing.canCastleQueen(previousBoard)) {
-                stringBuilder.append("O-O-O");
+            if (coords.equals(king.getCastleCoordinatesKingQ()) && previousKing.canCastleQueen(previousBoard)) {
+                sb.append("O-O-O");
                 isCastle = true;
-            } else if (coords.equals(king.getCastleCoordinatesKingK())
-                    && previousKing.canCastleKing(previousBoard)) {
-                stringBuilder.append("O-O");
+            } else if (coords.equals(king.getCastleCoordinatesKingK()) && previousKing.canCastleKing(previousBoard)) {
+                sb.append("O-O");
                 isCastle = true;
             } else {
-                stringBuilder.append(piece.getName().toString());
+                sb.append(piece.getName().toString());
             }
         }
-        stringBuilder.append(removeAmbiguous(previousBoard, coords, previousPiece));
+        sb.append(removeAmbiguous(previousBoard, coords, previousPiece));
 
         if (state.isCapture()) {
             if (piece.getName() == ID.PAWN) {
                 assert piece instanceof Pawn;
                 Pawn pawn = (Pawn) piece;
-                stringBuilder.append(pawn.getPreviousCoordinate().getColumn()).append("x");
+
+                sb.append(pawn.getPreviousCoordinate().getColumn())
+                        .append("x");
             } else {
-                stringBuilder.append("x");
+                sb.append("x");
             }
         }
 
         if (!isCastle) {
-            stringBuilder.append(coords.toString());
+            sb.append(coords.toString());
         }
 
         if (piece.getName() == ID.PAWN) {
             Pawn pawn = (Pawn) piece;
 
             if (pawn.canPromoteBlack(coords) || pawn.canPromoteWhite(coords)) {
-                stringBuilder
-                        .append("=")
+                sb.append("=")
                         .append(pawn.getPromotedPiece().getName().toString());
             }
         }
 
         if (state.isMate(Color.invert(piece.getColor()))) {
-            stringBuilder.append("#");
+            sb.append("#");
         } else if (state.isCheck(Color.invert(piece.getColor()))) {
-            stringBuilder.append("+");
+            sb.append("+");
         }
-        return stringBuilder.toString();
+        return sb.toString();
     }
 
     private String removeAmbiguous(PieceState state, BoardCoordinates coords, Piece piece) {
