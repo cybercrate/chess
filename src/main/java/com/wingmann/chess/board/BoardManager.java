@@ -8,5 +8,5 @@ import java.util.Map;
 
 public interface BoardManager {
     Map<BoardCoordinates, Piece> get();
-    String display(PieceState pieces);
+    String prepareDraw(PieceState pieces);
 }

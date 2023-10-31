@@ -59,7 +59,7 @@ public class ChessBoardManager implements BoardManager {
     }
 
     @Override
-    public String display(PieceState pieces) {
+    public String prepareDraw(PieceState pieces) {
         int firstRow = BoardLimit.FIRST_ROW.getRow();
         char firstColumn = BoardLimit.FIRST_COLUMN.getColumn();
         char lastColumn = BoardLimit.LAST_COLUMN.getColumn();

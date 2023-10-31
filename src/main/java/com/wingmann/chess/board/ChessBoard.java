@@ -30,6 +30,8 @@ public class ChessBoard implements Board {
         StringBuilder stringBuilder = new StringBuilder();
         int numberOfTurns = 0;
 
+        draw();
+
         while (!exit) {
             String[] move = Piece.moveManager.moveQuery(scanner);
 
@@ -66,7 +68,8 @@ public class ChessBoard implements Board {
             } else {
                 stringBuilder.append(ioManager.moveString(pieces, destination, piece)).append(" ");
             }
-            System.out.println(boardManager.display(pieces));
+
+            draw();
 
             if (pieces.isMate(Color.invert(turn))) {
                 System.out.printf("%s win.%n", turn);
@@ -100,5 +103,9 @@ public class ChessBoard implements Board {
                 }
             }
         }
+    }
+
+    private void draw() {
+        System.out.println(boardManager.prepareDraw(pieces));
     }
 }
