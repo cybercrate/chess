@@ -20,16 +20,9 @@ public class ChessBoardManager implements BoardManager {
     }
 
     private void generate(Color color, Map<BoardCoordinates, Piece> pieces) {
-        final int pawnRow;
-        final int row;
-
-        if (color == Color.BLACK) {
-            pawnRow = 7;
-            row = 8;
-        } else {
-            pawnRow = 2;
-            row = 1;
-        }
+        final boolean isBlack = (color == Color.BLACK);
+        final int pawnRow = isBlack ? 7 : 2;
+        final int row = isBlack ? 8 : 1;
 
         char column = 'a';
 
@@ -67,28 +60,42 @@ public class ChessBoardManager implements BoardManager {
 
     @Override
     public String display(PieceState pieces) {
-        int dimRow = BoardLimit.FIRST_ROW.getRow();
-        char dimColumn = BoardLimit.FIRST_COLUMN.getColumn();
+        int firstRow = BoardLimit.FIRST_ROW.getRow();
+        char firstColumn = BoardLimit.FIRST_COLUMN.getColumn();
         char lastColumn = BoardLimit.LAST_COLUMN.getColumn();
 
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s%n%s%n", getColumnIndex(), getSeparator()));
 
-        for (int row = 8; row >= dimRow; row--) {
-            sb.append(String.format("%s|", getSpacer(row,true)));
+        sb.append(getColumnIndex())
+                .append("\n")
+                .append(getSeparator())
+                .append("\n");
+
+        for (int row = 8; row >= firstRow; row--) {
+            sb.append(getSpacer(row, true)).append("|");
+
             Piece piece;
 
-            for (char column = dimColumn; column <= lastColumn; column++) {
+            for (char column = firstColumn; column <= lastColumn; column++) {
                 BoardCoordinates coords = new BoardCoordinates(column, row);
                 piece = pieces.getPieces().get(coords);
 
-                sb.append(piece != null ? String.format(" %s |", piece.toBoardString()) : "    |");
+                if (piece != null) {
+                    sb.append(" ")
+                            .append(piece.toBoardString())
+                            .append(" |");
+                } else {
+                    sb.append("    |");
+                }
             }
-            sb.append(String.format("%s%n%s%n", getSpacer(row,false), getSeparator()));
+            sb.append(getSpacer(row, false))
+                    .append("\n")
+                    .append(getSeparator())
+                    .append("\n");
         }
-
-        sb.append(String.format("%s%n", getColumnIndex()));
-        return sb.toString();
+        return sb.append(getColumnIndex())
+                .append("\n")
+                .toString();
     }
 
     private String getSpacer(int row, boolean leftSide) {
@@ -99,7 +106,9 @@ public class ChessBoardManager implements BoardManager {
         StringBuilder sb = new StringBuilder("   ");
 
         for (char column = 'A'; column <= 'H'; column++) {
-            sb.append(String.format(" %s   ", column));
+            sb.append(" ")
+                    .append(column)
+                    .append("   ");
         }
         return sb.toString();
     }
